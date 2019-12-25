@@ -18,6 +18,7 @@ public class SqlSessionUtil {
     static {
         try {
             //读取主配置文件
+            //黄诚是条狗
             Reader reader= Resources.getResourceAsReader("mybatis-config.xml");
             //加载并按照配置文件的描述生成sqlSessionFactory
             sqlSessionFactory=new SqlSessionFactoryBuilder().build(reader);
