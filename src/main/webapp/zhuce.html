@@ -61,6 +61,7 @@
                 7.验证码：非空
          */
 
+        //校验用户名
         function checkUseruname() {
            //1.获取用户名
             let uname = $("#uname").val();
@@ -78,19 +79,95 @@
             return flag;
         }
 
+        //校验密码
         function checkPassword() {
-            //1.获取用户名
-            let uname = $("#uname").val();
+            //1.获取密码
+            var password = $("#password").val();
             //2.定义正则
-            let reg_uname = /^\w{8,20}$/;
+            let reg_password = /^\w{8,20}$/;
             //3.判断 给出提示信息
-            let flag = reg_uname.test(uname);
+            let flag = reg_password.test(password);
             if(flag){
-                //合法用户名
-                $("#uname").css("border","")
+                //合法密码
+                $("#password").css("border","")
             }else{
                 //非法
-                $("#uname").css("border","1px solid red")
+                $("#password").css("border","1px solid red")
+            }
+            return flag;
+        }
+
+        //确认密码校验
+        function checkPassword1() {
+            let flag = $("#password").val()==$("#password1").val();
+            if(flag){
+                //合法密码
+                $("#password1").css("border","")
+            }else{
+                //非法
+                $("#password1").css("border","1px solid red")
+            }
+
+            return flag;
+        }
+
+        //确认真实姓名
+        function checkName() {
+            //1.获取密码
+            let name = $("#name").val();
+            let flag = name.length>1;
+            if(flag){
+                //合法密码
+                $("#name").css("border","")
+            }else{
+                //非法
+                $("#name").css("border","1px solid red")
+            }
+            return flag;
+        }
+
+        //校验邮箱
+        function checkEmail(){
+            let email = $("#email").val();
+
+            let reg_email = /^\w+@\w+\.\w+$/;
+            let flag = reg_email.test(email);
+            if(flag){
+                $("#email").css("border","")
+            }else{
+                $("#email").css("border","1px solid red")
+            }
+
+            return flag;
+        }
+
+
+        //校验手机号码
+        function checkPhone() {
+            let phone = $("#phone").val();
+
+            let reg_phone = /^[1][3,4,5,7,8][0-9]{9}$/;
+            let flag = reg_phone.test(phone);
+            if(flag){
+                $("#phone").css("border","")
+            }else{
+                $("#phone").css("border","1px solid red")
+            }
+
+            return flag;
+        }
+
+        //校验验证码
+        function checkCodeimg() {
+            //1.获取密码
+            let codeimg = $("#codeimg").val();
+            let flag = codeimg.length>1;
+            if(flag){
+                //合法密码
+                $("#codeimg").css("border","")
+            }else{
+                //非法
+                $("#codeimg").css("border","1px solid red")
             }
             return flag;
         }
@@ -99,12 +176,31 @@
         $(function () {
         //当表单提交时，调用所有的校验方法
             $("#form2").submit(function () {
-               return  checkUseruname() && checkPassword();
+
+                if(checkUseruname() && checkPassword() && checkPassword1() && checkEmail() && checkName()  && checkPhone() && checkCodeimg()){
+                    //校验通过，发送ajax请求，提交表单数据
+                    $.ajax({
+                        url:"registUserServlet",
+                        dataType:'json',
+                        data:$("#form2").serialize(),
+                        success:function (data) {
+
+                        }
+                    })
+                }
+
+                return  false;
 
             });
 
         //当某一个组件失去焦点时，调用对应的检验方法
             $("#uname").blur(checkUseruname);
+            $("#password").blur(checkPassword);
+            $("#password1").blur(checkPassword1);
+            $("#email").blur(checkEmail);
+            $("#name").blur(checkName);
+            $("#phone").blur(checkPhone);
+            $("#codeimg").blur(checkCodeimg);
         })
 
 
@@ -162,7 +258,7 @@
 
                     <p>用户账号：<input type="text" name="uname" id="uname" class="input_sty" placeholder="请输入账号" /></p>
                     <p>设置密码：<input type="text" name="password" id="password" class="input_sty" placeholder="请输入密码" /></p>
-                    <p>确认密码：<input type="text" name="textfield2" id="password1" class="input_sty" placeholder="请确认密码"  /></p>
+                    <p>确认密码：<input type="password" name="password1" id="password1" class="input_sty" placeholder="请确认密码"  /></p>
                     <p>真实姓名：<input type="text" name="name" id="name" class="input_sty" placeholder="请输入真实姓名"  /></p>
                     <p>性   别：<input type="radio" id="sex-1" name="sex" value="男" checked> 男
                             <input type="radio"  id="sex-2"  name="sex" value="女"> 女
@@ -170,7 +266,7 @@
             		<p>邮箱地址：<input type="text" name="email" id="email" class="input_sty" placeholder="请输入Email"  /></p>
             		<p>手机号码：<input type="text" name="phone" id="phone" class="input_sty" placeholder="请输入手机号码"  /></p>
             		<p>出生日期：<input type="date" id="birthday" name="birthday" placeholder="年/月/日"></p>
-          		 	<p>　验证码：<input type="text" name="textfield2" id="" class="input_sty2" /><img src="codeimages"  alt=""/></p>
+          		 	<p>　验证码：<input type="text" name="codeimg" id="codeimg" class="input_sty2" /><img src="codeimages"  alt=""/></p>
                     <p class="zc_but"><input type="submit" name="button2" id="button2" value="注 册" /></p>
                     <div class="tk"><input type="checkbox" name="checkbox" id="checkbox" /> 我已经阅读并同意以下服务条款</div>
                 </div>

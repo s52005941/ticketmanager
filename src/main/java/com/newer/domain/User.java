@@ -1,14 +1,16 @@
 package com.newer.domain;
 
+import java.io.Serializable;
 import java.sql.Date;
 
 /**
  * 用户实体类
  */
-public class User {
+public class User implements Serializable {
     private int uid; //用户id
     private String uname; //用户账号
     private String password; //用户密码
+    private String name;   //真实姓名
     private Date birthday;  //出生日期
     private String email;  //邮箱
     private String area;   //所在区域
@@ -43,6 +45,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Date getBirthday() {
