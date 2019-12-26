@@ -15,7 +15,7 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.Objects;
 
-@WebServlet("concerts")
+@WebServlet("/concerts")
 public class ConcertServlet extends HttpServlet {
     ConcertService concertService = new ConcertService();
 

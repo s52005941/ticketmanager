@@ -25,6 +25,8 @@
 
     <!--声明所有映射器接口实现-->
     <mappers>
+        <mapper class="com.newer.mapper.ConcertMapper"/>
+        <mapper resource="mapper/ConcertMapper.xml"/>
 
     </mappers>
 	
