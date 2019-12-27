@@ -184,7 +184,14 @@
                         dataType:'json',
                         data:$("#form2").serialize(),
                         success:function (data) {
-
+                            //处理服务器响应的数据 data {flag:true,errorMsg:"注册失败"}
+                            if(data.flag==true){
+                                //注册成功
+                                location.href="zhuce_ok.html";
+                            }else{
+                                //注册失败 给errorMsg添加提示信息
+                                $("#errorMsg").html(data.errorMsg);
+                            }
                         }
                     })
                 }
@@ -253,11 +260,12 @@
      <div id="Regis_mainbox">
         <p class="title"><img src="images/zc_title.gif" width="167" height="25" style="margin-top:14px; margin-left:13px;"/> </p>
      		<div class="left">
+                <div id="errorMsg" style="color: red;text-align: center"></div>
             	<form id="form2" name="form2" method="post" action="">
             	<div class="cont">
 
                     <p>用户账号：<input type="text" name="uname" id="uname" class="input_sty" placeholder="请输入账号" /></p>
-                    <p>设置密码：<input type="text" name="password" id="password" class="input_sty" placeholder="请输入密码" /></p>
+                    <p>设置密码：<input type="password" name="password" id="password" class="input_sty" placeholder="请输入密码" /></p>
                     <p>确认密码：<input type="password" name="password1" id="password1" class="input_sty" placeholder="请确认密码"  /></p>
                     <p>真实姓名：<input type="text" name="name" id="name" class="input_sty" placeholder="请输入真实姓名"  /></p>
                     <p>性   别：<input type="radio" id="sex-1" name="sex" value="男" checked> 男
@@ -266,7 +274,15 @@
             		<p>邮箱地址：<input type="text" name="email" id="email" class="input_sty" placeholder="请输入Email"  /></p>
             		<p>手机号码：<input type="text" name="phone" id="phone" class="input_sty" placeholder="请输入手机号码"  /></p>
             		<p>出生日期：<input type="date" id="birthday" name="birthday" placeholder="年/月/日"></p>
-          		 	<p>　验证码：<input type="text" name="codeimg" id="codeimg" class="input_sty2" /><img src="codeimages"  alt=""/></p>
+          		 	<p>　验证码：<input type="text" name="codeimg" id="codeimg"  class="input_sty2" />
+                        <img src="codeimages" onclick="changeCheckCode(this)"  alt=""/>
+                        <script type="text/javascript">
+                            //图片点击事件
+                            function changeCheckCode(img) {
+                                img.src="codeimages?"+new Date().getTime();
+                            }
+                        </script>
+                    </p>
                     <p class="zc_but"><input type="submit" name="button2" id="button2" value="注 册" /></p>
                     <div class="tk"><input type="checkbox" name="checkbox" id="checkbox" /> 我已经阅读并同意以下服务条款</div>
                 </div>
