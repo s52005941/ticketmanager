@@ -134,4 +134,24 @@ public class User implements Serializable {
     public void setCode(String code) {
         this.code = code;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "uid=" + uid +
+                ", uname='" + uname + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", birthday=" + birthday +
+                ", email='" + email + '\'' +
+                ", area='" + area + '\'' +
+                ", address='" + address + '\'' +
+                ", coding='" + coding + '\'' +
+                ", identity='" + identity + '\'' +
+                ", phone='" + phone + '\'' +
+                ", sex='" + sex + '\'' +
+                ", status='" + status + '\'' +
+                ", code='" + code + '\'' +
+                '}';
+    }
 }

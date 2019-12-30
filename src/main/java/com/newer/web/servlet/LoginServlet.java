@@ -18,41 +18,19 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 /**
- * 注册
+ * 登录  进行判断是否激活
  */
-@WebServlet("/registUserServlet")
-public class RegistUserServlet extends HttpServlet {
+@WebServlet("/loginServlet")
+public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         this.doGet(request,response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //用于封装后端返回前端数据对象
-        ResultInfo info = new ResultInfo();
-        Gson gson =  new Gson();
-        PrintWriter out = response.getWriter();
-
+        request.setCharacterEncoding("utf-8");
         response.setContentType("application/json;charset=utf-8");
-        //验证码
-        String codeimg = request.getParameter("codeimg");
-        HttpSession session = request.getSession();
-        String code = (String) session.getAttribute("code");
-        //为了保证验证码的一次性使用
-        session.removeAttribute("code");
-
-        //比较
-        if(code == null || !code.equalsIgnoreCase(codeimg)){
-
-            //验证码错误
-            info.setFlag(false);
-            info.setErrorMsg("验证码错误!");
-            out.print(gson.toJson(info));
-            out.close();
-            return;
-        }
-
-
-        //1.获取数据
+        UserService service = new UserService();
+        //1.获取用户名和密码
         Map<String, String[]> map = request.getParameterMap();
         //2.封装对象
         User user = new User();
@@ -63,22 +41,31 @@ public class RegistUserServlet extends HttpServlet {
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
-        //3.调用service注册
-        UserService service = new UserService();
-        boolean flag =  service.regist(user);
-
-
-        //4.响应结果
-        if(flag){
-            //成功
-            info.setFlag(true);
-        }else{
-            //失败
+        //3.调用查询
+        User u = service.login(user);
+        ResultInfo info = new ResultInfo();
+        HttpSession session = request.getSession();
+        session.setAttribute("user",u);
+        //4.判断用户对象是否为null
+        if(u == null){
+            //用户名或密码错误
             info.setFlag(false);
-            info.setErrorMsg("注册失败!");
+            info.setErrorMsg("用户名或密码错误");
+        }
+        //5.判断用户是否激活
+        if(u != null && !"Y".equals(u.getStatus())){
+            //用户未激活
+            info.setFlag(false);
+            info.setErrorMsg("您尚未激活，请登录邮箱进行激活");
+        }
+        //6.判断登陆成功
+        if(u !=null && "Y".equals(u.getStatus())){
+            info.setFlag(true);
         }
 
-        //将info序列化为json 写回客户端
+         //响应数据
+        Gson gson = new Gson();
+        PrintWriter out = response.getWriter();
         out.print(gson.toJson(info));
         out.close();
 

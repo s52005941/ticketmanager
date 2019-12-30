@@ -71,4 +71,46 @@ public class UserService {
             return false;
         }
     }
+
+    /**
+     * 登录
+     * @param user
+     * @return
+     */
+    public User login(User user) {
+        init();
+
+        return userMapper.findByUsernameAndPassword(user.getUname(),user.getPassword());
+    }
+
+    /**
+     * 修改个人信息
+     * @param user
+     * @return
+     */
+    public int updateUser(User user) {
+        int count = 0;
+        init();
+
+        count = userMapper.updateUser(user);
+        sqlSession.commit();
+        SqlSessionUtil.close(sqlSession);
+        return count;
+    }
+
+    /**
+     * 修改密码
+     * @param uname
+     * @param password
+     * @return
+     */
+    public int updatePassword(String uname , String password){
+        int count = 0;
+        init();
+        count = userMapper.updatePassword(uname,password);
+        sqlSession.commit();
+        SqlSessionUtil.close(sqlSession);
+
+        return count;
+    }
 }

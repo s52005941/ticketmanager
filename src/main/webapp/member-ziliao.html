@@ -56,6 +56,58 @@
   });
   </script>
 
+    <script >
+
+        $(function () {
+            $.ajax({
+                url: 'userSession',
+                dataType: 'json',
+                success: function (user) {
+                    if (user != null) {
+                        $("#span_uname").text(user.uname + "欢迎您");
+                        $("#span_a").hide();
+                        $("#uname").val(user.uname);
+                        $("#name").val(user.name);
+                        $("#email").val(user.email);
+                        $("#phone").val(user.phone);
+                    }
+                    if(user.address != null){
+                         $("#address").val(user.address);
+                    }
+                    if(user.coding != null){
+                         $("#coding").val(user.coding);
+                    }
+                    if(user.identity != null){
+                          $("#identity").val(user.identity);
+                    }
+                    console.log(user);
+                }
+            });
+            //1.给登录按钮绑定单击事件
+            $("#button2").click(function () {
+                //2.发送ajax请求，提交表单数据
+                $.ajax({
+                    url:'updateUserServlet',
+                    data:{'uname':$("#uname").val(),'name':$("#name").val(),'sex':$('#sex22 input[name="sex"]:checked ').val(),
+                        's1':$("#s1").val(),'s2':$("#s2").val(),'s3':$("#s3").val(),'address':$("#address").val(),
+                        'coding':$("#coding").val(),'identity':$("#identity").val(),'phone':$("#phone").val(),'email':$("#email").val()},
+                    dataType:'json',
+                    success:function (count) {
+                        //3.处理响应数据
+                        if(count==1){
+                            alert("保存成功");
+                        }else{
+                            //登陆失败
+                            alert("保存失败");
+                        }
+                    }
+                })
+            })
+        })
+
+
+
+    </script>
 
 <!--[if IE 6]>
 <script src="js/DD_belatedPNG.js"></script>
@@ -69,7 +121,9 @@
     	<div class="w1002">
         
         	<div class="header_top">
-            	   <a href="#" class="dl">用户登录</a><a href="#" class="dl">注册用户</a>|<a href="#">我的梦田</a><span>购物车 <b class="dl">0</b> 件</span><a href="#">梦田导航</a><a href="#">帮助中心</a><a href="#" class="phone">手机购票</a><a href="#" class="jm">演出剧目</a><a href="#" class="cx">真伪查询</a>
+                <span id="span_uname"></span>
+            	  <span id="span_a"> <a href="#" class="dl">用户登录</a><a href="#" class="dl">注册用户</a></span>|
+                <a href="#">我的梦田</a><span>购物车 <b class="dl">0</b> 件</span><a href="#">梦田导航</a><a href="#">帮助中心</a><a href="#" class="phone">手机购票</a><a href="#" class="jm">演出剧目</a><a href="#" class="cx">真伪查询</a>
             </div>
         
         	<div class="site_logo floatl">
@@ -117,7 +171,8 @@
                 
                 <h4>账户中心</h4>
         			<ul>
-               	    <li><a href="#">订单管理</a></li>
+                        <li><a href="member-mima.html">修改密码</a></li>
+                        <li><a href="#">订单管理</a></li>
                         <li><a href="#">我的积分</a></li>
                         <li><a href="#">缺货登记</a></li>
                         <li><a href="#">预定登记</a></li>
@@ -140,40 +195,33 @@
  				     <td width="65">昵　　称：</td>
  				     <td width="272">
  				       <label>
- 				         <input type="text" name="textfield2" id="textfield2" class="input-text-2" />
+ 				         <input type="text" name="uname" id="uname" class="input-text-2" disabled="disabled" />
 			           </label>
 			         </td>
 		      </tr>
  				   <tr>
  				     <td>真实姓名：</td>
- 				     <td><input type="text" name="textfield3" id="textfield3" class="input-text-2" /></td>
+ 				     <td><input type="text" name="name" id="name" class="input-text-2" /></td>
 		      </tr>
  				   <tr>
  				     <td>性　　别：</td>
- 				     <td><label class="radio">
-                        <input type="radio" id="sexRadio" value="男" name="Sex"  /><span class="m">男</span>
-                    </label>
+ 				     <td id="sex22">
+                         <label class="radio">
+                        <input type="radio" id="sex1" value="男" name="sex" checked="checked" /><span class="m">男</span>
+                         </label>
                     <label class="radio">
-                        <input type="radio" id="sexRadio1" value="女" name="Sex"  checked="checked" /><span>女</span>
+                        <input type="radio" id="sex2" value="女" name="sex"   /><span>女</span>
                     </label>
-&nbsp;</td>
+&nbsp;                      </td>
 		      </tr>
 <script type="text/javascript" src="http://my.damai.cn/js/dateselects.js"></script>
 
-				   <tr>
- 				     <td>出生日期：</td>
- 				     <td><script type="text/javascript">
-                    FnCreateYearMonthDay('birthY', 1, 'birthM', 1, 'birthD', 1);
-                </script>
-</td>
-		      </tr>
-
                 <tr>
                     <td>所在区域</td>
-                    <td data-toggle="distpicker">
-                        <select></select>
-                        <select></select>
-                        <select></select>
+                    <td data-toggle="distpicker" id="td1" >
+                        <select id="s1"></select>
+                        <select id="s2"></select>
+                        <select id="s3"></select>
                     </td>
 
                 </tr>
@@ -183,7 +231,7 @@
 
  				   <tr>
  				     <td>街道住址：</td>
- 				     <td> <input type="text" class="input-text-2" name="DetailAddress" value="" maxlength="100"/></td>
+ 				     <td> <input type="text" class="input-text-2" id="address" name="address" value="" maxlength="100"/></td>
 		            </tr>
 
 
@@ -194,7 +242,7 @@
 
                 <tr>
                     <td>身份证号：</td>
-                    <td><input id="cardinp" type="text" class="input-text-2" name="IdentityCard" value=""/></td>
+                    <td><input id="identity" type="text" class="input-text-2" name="identity" value=""/></td>
                 </tr>
 
                 <tr>
@@ -204,14 +252,14 @@
 
                 <tr>
                     <td>邮箱：</td>
-                    <td> <input type="text" class="input-text-2" name="DetailAddress" value="" maxlength="100"/></td>
+                    <td> <input type="text" class="input-text-2" id="email" name="email" maxlength="100" disabled="disabled" /></td>
                 </tr>
 
 
  				 
  				   <tr>
  				     <td>&nbsp;</td>
- 				     <td> <input type="submit" name="button2" id="button2" value="保存" class="tj_buts" style="margin-left:0;" /></td>
+ 				     <td> <input type="button" name="button2" id="button2" value="保存" class="tj_buts" style="margin-left:0;" /></td>
 		      </tr>
 		    </table>
             
