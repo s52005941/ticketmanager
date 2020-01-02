@@ -1,0 +1,386 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>梦田票务</title>
+<link href="css/header.css" rel="stylesheet" type="text/css" />
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+    <script src="js/jquery-3.4.1.min.js"></script>
+
+
+    <script >
+
+        var tid=localStorage.getItem("tid")
+        var cid=localStorage.getItem("cid")
+        localStorage.removeItem('tid')
+        localStorage.removeItem('cid')
+        var pric = ''
+
+        $(function () {
+            $.ajax({
+                url: 'userSession',
+                dataType: 'json',
+                success: function (user) {
+                    if (user != null) {
+                        $("#span_uname").text(user.uname + "欢迎您");
+                        $("#span_a").hide();
+                    }else{
+                        location.href = "denglu.html";
+                    }
+                    if(user.area == null || user.address == null || user.phone == null){
+                        $("#span_emg").text("请前往个人中心完善收货地址!");
+                    }else{
+                        $("#area").text(user.area);
+                        $("#address").text(user.address);
+                        $("#phone").text(user.phone);
+                    }
+                }
+            })
+            $.ajax({
+                url:"concerts",
+                data:{'action':'findConcertBycId','cid':cid},
+                dataType:"json",
+                success:function(data){
+                    $('#cover').attr("src",data.cCover)
+                    $('#tic').empty()
+                    let $td = `<p><a href="#" >${data.cTitle}</a></p>
+                               <p>地点：${data.cAddr}</p>
+                               <p>时间：${data.cTime}</p>`
+                    $('#tic').append($td)
+                }
+            })
+            $.ajax({
+                url:"tickets",
+                data:{'action':'findTicketBytId','tid':tid},
+                dataType:"json",
+                success:function(data){
+                    pric = data.tPrice
+                    $('#pri').text("￥"+pric)
+                    $('#tot').text("￥"+pric)
+                    $('#tota').text(+pric)
+                }
+            })
+
+            $('#textfield2').on("input",function () {
+                var con = $(this).val()
+                $('#tot').text("￥"+pric*con)
+                $('#tota').html(pric*con)
+            })
+
+            $("#img").click(function () {
+                $.ajax({
+                    url:'addBookServlet',
+                    data:{'tid':tid,'num':$('#textfield2').val(),'total':$('#tota').text(),'cid':cid},
+                    dataType:'json',
+                    success:function (data) {
+                        if(data==1){
+                            alert("加入订单");
+                            location.href='member.html'
+                        }
+                    }
+                })
+            })
+
+        })
+
+        function jian() {
+            if($('#textfield2').val()>1){
+                $('#textfield2').val($('#textfield2').val()-1)
+                $('#tot').text("￥"+pric*$('#textfield2').val())
+                $('#tota').html(pric*$('#textfield2').val())
+            }
+        }function jia() {
+            if($('#textfield2').val()<6){
+                $('#textfield2').val(parseInt($('#textfield2').val())+parseInt(1))
+                $('#tot').text("￥"+pric*$('#textfield2').val())
+                $('#tota').html(pric*$('#textfield2').val())
+            }
+        }
+
+    </script>
+ 
+<!--[if IE 6]>
+<script src="js/DD_belatedPNG.js"></script>
+<script>
+  DD_belatedPNG.fix('.but_gp,.rslides');
+</script>
+<![endif]-->
+
+</head>
+<body>
+<div id="header">
+    	<div class="w1002">
+
+        	<div class="header_top">
+                <span id="span_uname"></span>
+                <span id="span_a"> <a href="#" class="dl">用户登录</a><a href="#" class="dl">注册用户</a></span>
+                |<a href="member-ziliao.html">我的梦田</a><span>购物车 <b class="dl">0</b> 件</span><a href="#">梦田导航</a><a href="#">帮助中心</a><a href="#" class="phone">手机购票</a><a href="#" class="jm">演出剧目</a><a href="#" class="cx">真伪查询</a>
+            </div>
+        
+        	<div class="site_logo floatl">
+            	<a href="#"><img src="images/site_logo.gif" width="170" height="65" /></a>
+            </div>
+            
+            <div class="header_city floatl">
+            	<h3>长 沙</h3>
+            </div>
+            
+            
+            <div class="header_search floatl">
+            	<p class="hot">热门搜索：<a href="#">刘德华</a>|<a href="#">周杰伦</a>|<a href="#">五月天</a>|<a href="#">何韵诗</a>|<a href="#">许巍</a>|<a href="#">陶喆</a>|<a href="#">更多</a></p>
+                <form id="form1" name="form1" method="post" action="">
+                	<div><input type="text" name="textfield" id="textfield" class="input_style" /><input type="submit" name="button" id="button" value=" " class="but_tj" /></div>
+                </form>
+            </div>
+        </div>
+        
+       
+       <div id="site_nav">
+       		<div class="clearfix nav_post">
+            	<span><a href="#">精彩专题</a>|<a href="#">最新动态</a></span><p class="yahei"><a href="#">首 页</a><a href="#">巡 演</a><a href="#">订 票</a><a href="#">售票场馆</a></p>
+       		</div>
+       </div> 
+    </div>
+    
+    
+    
+    
+     <div class="inside_cart">
+     	 	<p class="btitle yahei"><strong>购物车</strong><span>Cart</span></p>
+            	<div class="payment-header">
+                	<p class="yahei clearfix"><span class="this">查看购物车</span><span>填写并核对订单信息</span><span>提交订单</span><span>订单追踪</span></p>
+                	<div class="step1"></div>
+                </div>
+                
+                      <div class="shouhuo_boxsty shouhuo_dizhi" id="peisong-box">
+       	<p class="title"><strong>选择配送方式</strong></p>
+        <p class="peisong-hd"><input type="radio" name="shipping" class="shipping_value" checked id="peisong-s-1" value="2" hideFocus /><label for="peisong-s-1">&nbsp;快递寄送<span>(除部分快递无法涉及的区域外，统一采用顺丰航空快递，运费30元)</span></label></p>
+        <div class="peisong-bd" >
+                <ul class="flow-address-list">
+        	<li class="al selected" address_id=5>
+            	<s></s><span class="jsz">寄送至</span>
+                <a href="javascript:;" class="edit-address" info='{"address_id":"5","address_name":"","user_id":"1","consignee":"\u67d0\u67d0\u67d0","email":"","country":"0","province":"2","city":"52","district":"500","address":"\u67d0\u67d0\u67d0","zipcode":"11111","tel":"11111","mobile":"1111","sign_building":"","best_time":""}'>
+                    <span></span></a>
+                <label><input type="radio" name="address" checked />
+                    <span id="area"></span>&nbsp;<span id="address"></span>&nbsp;手机号码：<span id="phone" class="mobile"></span>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="span_emg" style="color: red"></span>&nbsp;<a href="member-ziliao.html">修改地址</a></label>
+            </li>
+
+
+        </ul>
+               	</div> 
+        <p class="peisong-hd"><input type="radio" name="shipping" class="shipping_value" id="peisong-s-2"  value="1" hideFocus /><label for="peisong-s-2">&nbsp;上门自取</label></p>
+        <div class="peisong-bd" style="display:none;">
+        	<p>上门自取地址：长沙市天心区劳动西路289号嘉盛国际广场2010房</p>
+            <div style="margin-top:15px; color:#999;">
+            	<p>取货人：<input type="text" class="text" id="zt_name" />&nbsp;&nbsp;&nbsp;&nbsp;手机号码：<input type="text" class="text" id="zt_cellphone" /></p>
+            </div>
+        </div>
+       </div>
+
+
+
+		<div class="shouhuo_boxsty shouhuo_dizhi">
+       		<p class="title"><strong>选择支付方式</strong></p>
+        	<div class="shopflow_table">
+            	<ul id="pays-list">
+                	<li class="online-pay">
+                    	<p class="pay-hd"><input type="radio" name="payment" value="" id="pay-s-1" class="pay-s" checked hideFocus /><label for="pay-s-1">&nbsp;在线支付</label></p>
+                        <div class="pay-bd" >
+                        	<div class="tab-hd clearfix">
+                            	<a href="javascript:;" class="current" hideFocus>网银支付<s></s></a>
+                                <!--<a href="javascript:;" hideFocus>支付平台<s></s></a>-->
+                            </div>
+                            <div class="tab-bd bank-list clearfix">
+                            	                            	<p><input type="radio" name="payment"  value="9" id="pay-bank-0" class="payment_value" /><label for="pay-bank-0" class="abc" hideFocus></label></p>
+                                                            	<p><input type="radio" name="payment"  value="8" id="pay-bank-1" class="payment_value" /><label for="pay-bank-1" class="bcom" hideFocus></label></p>
+                                                            	<p><input type="radio" name="payment"  value="7" id="pay-bank-2" class="payment_value" /><label for="pay-bank-2" class="bob" hideFocus></label></p>
+                                                            	<p><input type="radio" name="payment"  value="6" id="pay-bank-3" class="payment_value" /><label for="pay-bank-3" class="cmb" hideFocus></label></p>
+                                                            	<p><input type="radio" name="payment"  value="5" id="pay-bank-4" class="payment_value" /><label for="pay-bank-4" class="cmbc" hideFocus></label></p>
+                                                            	<p><input type="radio" name="payment"  value="4" id="pay-bank-5" class="payment_value" /><label for="pay-bank-5" class="icbc" hideFocus></label></p>
+                                                            	<p><input type="radio" name="payment"  value="3" id="pay-bank-6" class="payment_value" /><label for="pay-bank-6" class="boc" hideFocus></label></p>
+                                                            	<p><input type="radio" name="payment"  value="1" id="pay-bank-7" class="payment_value" /><label for="pay-bank-7" class="ccb" hideFocus></label></p>
+                                                            </div>
+                            <div class="tab-bd bank-list clearfix" style="display:none;">
+                            	                            	<p><input type="radio" name="payment"  value="2" id="pay-bank2-0" class="payment_value" /><label for="pay-bank2-0" class="alipay" hideFocus></label></p>
+                                                            </div>
+                        </div>
+                    </li>
+                    <li>
+                    	<p class="pay-hd"><input type="radio" name="payment"  value="10" id="pay-s-2" class="pay-s payment_value" hideFocus /><label for="pay-s-2">&nbsp;货到付款<span>(限长沙二环以内地区)</span></label></p>
+                        <div class="pay-bd" style="display:none;">
+                        对于已经开通了货到付款方式的商品，您只需一个电话，我们即可在两个工作日内把票送到您的手上。<br/>
+						订票电话：400-677-9898<br/>
+						注：送票区域限定在长沙市二环之内， 超出送票范围的一般是不送的，如果您一定想享受这个服务，需另加10元/次送票费。<br/>
+                        </div>
+                        <p class="pay-hd"><input type="radio" name="payment"  value="11" id="pay-s-3" class="pay-s payment_value" hideFocus /><label for="pay-s-3">&nbsp;线下支付<span></span></label></p>
+                        <div class="pay-bd" style="display:none;">
+                        您可以通过银行转账汇款来支付<br/>
+                        汇款流程：<br/>
+						电话咨询票价 > 汇款到指定银行 > 发汇款单号给客服人员 > 客服对您的订单做出处理 > 邮寄或留票<br/>
+
+						汇款信息<br/>
+						中国建设银行<br/>
+						开户名：甘超<br/>
+						开户行：湖南省分行长沙天心支行营业部<br/>
+						开户账号：6227 0029 2024 0062 802<br/>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>     
+	
+    	<div class="shouhuo_boxsty shouhuo_dizhi">
+        
+        <p class="title"><strong>确认商品信息</strong></p>
+
+		<div class="sp_xx" style="margin-top:25px;">
+               	  <table width="928" height="84" border="0" cellpadding="0" cellspacing="0">
+                	  <tr class="ttitle">
+                	    <td width="307" height="34">商品信息</td>
+                	    <td width="101">单价</td>
+                	    <td width="116">积分</td>
+                	    <td width="141">购买票数</td>
+                	    <td width="132">合计</td>
+                	    <td width="129">操作</td>
+              	    </tr>
+                	  <tr>
+                	    <td class="sp">
+                       	  <table width="302" height="45" border="0" cellpadding="0" cellspacing="0">
+                        	   <tr>
+                        	     <td width="82" class="leftimg"><img src="images/simg_07.jpg" width="144" height="189"  id="cover"/></td>
+                        	     <td width="220" id="tic">
+                                 	
+                                    <p><a href="#" >飙.任贤齐2013年世界巡回演唱会长沙站</a></p>
+                                    <p>地点：湖南国际会展中心</p>
+                                    <p>时间：2013-11-02 周六 20:00</p>
+                                    <p>票价：380</p>
+                                 
+                                 </td>
+                      	     </tr>
+               	        </table></td>
+                	    <td id="pri">￥380.00</td>
+                	    <td>0</td>
+                	    <td class="shul"><span onclick="jian()">-</span><input type="text" name="textfield2" id="textfield2" value="1"/><span onclick="jia()">+</span></td>
+                	    <td id="tot">￥380.00</td>
+                	    <td><a href="#"><img src="images/icon_x2.gif" width="19" height="19" /></a></td>
+              	    </tr>
+              	  </table>
+                </div>
+                <div class="jiesuan_next">
+                	商品总价(不含运费)： <strong id="tota"></strong>元 <a href="#">
+                    <img id="img" src="images/icon_js.gif" width="86" height="32" /></a>
+                </div>
+                </div>
+                 
+                
+                <div class="ganxinq">
+                	<p class="title yahei"><strong>您可能感兴趣的</strong><span>Recommend</span></p>
+                    <div id="carousel_container">
+               
+                	<div id="carousel_inners">
+              		<ul id="carousel_ul" class="clearfix">
+                       	<li><a href="#"><img src="images/simg_17.jpg" width="171" height="214" /></a><p><a href="#">S.H.E TOGETHER FOREVER 2013世界巡回演唱会 北京站</a></p><span>2013.09.13</span></li>
+                        <li><a href="#"><img src="images/simg_17.jpg" width="171" height="214" /></a><p><a href="#">S.H.E TOGETHER FOREVER 2013世界巡回演唱会 北京站</a></p><span>2013.09.13</span></li>
+                        <li><a href="#"><img src="images/simg_17.jpg" width="171" height="214" /></a><p><a href="#">S.H.E TOGETHER FOREVER 2013世界巡回演唱会 北京站</a></p><span>2013.09.13</span></li>
+                        <li><a href="#"><img src="images/simg_17.jpg" width="171" height="214" /></a><p><a href="#">S.H.E TOGETHER FOREVER 2013世界巡回演唱会 北京站</a></p><span>2013.09.13</span></li>
+                        <li><a href="#"><img src="images/simg_17.jpg" width="171" height="214" /></a><p><a href="#">S.H.E TOGETHER FOREVER 2013世界巡回演唱会 北京站</a></p><span>2013.09.13</span></li>
+                        <li><a href="#"><img src="images/simg_17.jpg" width="171" height="214" /></a><p><a href="#">S.H.E TOGETHER FOREVER 2013世界巡回演唱会 北京站</a></p><span>2013.09.13</span></li>
+                        <li><a href="#"><img src="images/simg_17.jpg" width="171" height="214" /></a><p><a href="#">S.H.E TOGETHER FOREVER 2013世界巡回演唱会 北京站</a></p><span>2013.09.13</span></li>
+                        <li><a href="#"><img src="images/simg_17.jpg" width="171" height="214" /></a><p><a href="#">S.H.E TOGETHER FOREVER 2013世界巡回演唱会 北京站</a></p><span>2013.09.13</span></li>
+                        <li><a href="#"><img src="images/simg_17.jpg" width="171" height="214" /></a><p><a href="#">S.H.E TOGETHER FOREVER 2013世界巡回演唱会 北京站</a></p><span>2013.09.13</span></li>
+                        <li><a href="#"><img src="images/simg_17.jpg" width="171" height="214" /></a><p><a href="#">S.H.E TOGETHER FOREVER 2013世界巡回演唱会 北京站</a></p><span>2013.09.13</span></li>
+                        <li><a href="#"><img src="images/simg_17.jpg" width="171" height="214" /></a><p><a href="#">S.H.E TOGETHER FOREVER 2013世界巡回演唱会 北京站</a></p><span>2013.09.13</span></li>
+                        <li><a href="#"><img src="images/simg_17.jpg" width="171" height="214" /></a><p><a href="#">S.H.E TOGETHER FOREVER 2013世界巡回演唱会 北京站</a></p><span>2013.09.13</span></li>
+                    </ul>
+                </div>
+                
+                </div>
+                
+                <div id="left_scroll"></div>
+ 				<div id="right_scroll"></div>
+   	 	</div>
+ 
+     </div>
+ 
+     	<div class="clear"></div>
+ 
+     </div>
+    
+    
+    
+    
+    
+    <div class="changguan_focus"></div>
+    <div id="footer">
+	 <div class="cont">
+             <dl>
+                <dt class="yahei"><a href="#">账户安全</a></dt>
+                <dd>
+                    <p><a href="#">找回密码</a></p>
+                    <p><a href="#">账户注册</a></p>
+                    <p><a href="#">账户绑定</a></p>
+                </dd>
+             </dl>
+             <dl>
+                <dt class="yahei"><a href="#">账户安全</a></dt>
+                <dd>
+                    <p><a href="#">找回密码</a></p>
+                    <p><a href="#">账户注册</a></p>
+                    <p><a href="#">账户绑定</a></p>
+                </dd>
+             </dl>
+             <dl>
+                <dt class="yahei"><a href="#">账户安全</a></dt>
+                <dd>
+                    <p><a href="#">找回密码</a></p>
+                    <p><a href="#">账户注册</a></p>
+                    <p><a href="#">账户绑定</a></p>
+                </dd>
+             </dl>
+             <dl>
+                <dt class="yahei"><a href="#">账户安全</a></dt>
+                <dd>
+                    <p><a href="#">找回密码</a></p>
+                    <p><a href="#">账户注册</a></p>
+                    <p><a href="#">账户绑定</a></p>
+                </dd>
+             </dl>
+             <dl style="border-right:none;">
+                <dt class="yahei"><a href="#">账户安全</a></dt>
+                <dd>
+                    <p><a href="#">找回密码</a></p>
+                    <p><a href="#">账户注册</a></p>
+                    <p><a href="#">账户绑定</a></p>
+                </dd>
+             </dl>
+             <div class="clear"></div>
+         </div>
+         
+         <div class="footer_boot">
+         	<h4><a href="#">公司介绍</a> | <a href="#">品牌识别</a> | <a href="#">联系方式</a> | <a href="#">合作招商</a> | <a href="#">招聘信息</a> | <a href="#">隐私声明</a> | <a href="#">安全认证</a> | <a href="#">友情链接</a> | <a href="#">网站地图</a></h4>
+                <p>本网站所有产品设计（包括造型，颜色，图案和观感），功能及其展示形式，均已受版权或产权保护。</p>
+                <p>任何公司及个人不得以任何方式复制部分或全部，违者将依法追究责任，特此声明。</p>
+                <p>本站部分内容来自互联网或由会员上传，版权归原作者所有。如有问题，请及时联系我们。</p>
+                <p>版权所有 梦田票务 Copyright2003-2013 All Rights Reserved 京ICP备11043884号 京公网安备11010102000430号</p>
+                <p>湖南梦田体育文化传播有限公司</p>
+         </div>
+    
+    
+    	<div class="footer_img"><img src="images/footer_img.gif" width="41" height="57" /></div>
+    </div>        
+        
+        
+        
+        
+        
+       
+        
+        
+        
+        
+
+
+ 
+</body>
+</html>

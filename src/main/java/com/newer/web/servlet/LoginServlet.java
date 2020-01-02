@@ -46,6 +46,7 @@ public class LoginServlet extends HttpServlet {
         ResultInfo info = new ResultInfo();
         HttpSession session = request.getSession();
         session.setAttribute("user",u);
+        System.out.println("login:"+u);
         //4.判断用户对象是否为null
         if(u == null){
             //用户名或密码错误

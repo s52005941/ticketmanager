@@ -6,26 +6,19 @@
 <link href="css/header.css" rel="stylesheet" type="text/css" />
 <link href="css/style.css" rel="stylesheet" type="text/css" />
     <script src="js/jquery-3.4.1.min.js"></script>
-    <script type="text/javascript" src="js/jquery.switchable[all].min.js"></script>
-    <script type="text/javascript" src="js/jquery.jcarousel.pack.js"></script>
-    <link rel="stylesheet" type="text/css" href="css/jquery.fancybox-1.3.4.css" media="screen" />
-    <script type="text/javascript" src="js/jquery.fancybox-1.3.4.pack.js"></script>
-    <script type="text/javascript" src="js/jquery.ad-gallery.js"></script>
-    <script type="text/javascript" src="js/jquery.idTabs.min.js"></script>
 <script type=text/javascript src="js/ifocus.js"></script>
 <script type="text/javascript" src="js/scool.js"></script>
 <script type="text/javascript" src="js/imgp.js"></script>
-
+<script type="text/javascript" src="js/jquery.switchable[all].min.js"></script>
+<script type="text/javascript" src="js/jquery.jcarousel.pack.js"></script>
 <script type="text/javascript" src="js/datepicker.js"></script>
-
+<script type="text/javascript" src="js/jquery.fancybox-1.3.4.pack.js"></script>
+<link rel="stylesheet" type="text/css" href="css/jquery.fancybox-1.3.4.css" media="screen" />
+<script type="text/javascript" src="js/jquery.ad-gallery.js"></script>
+<script type="text/javascript" src="js/jquery.idTabs.min.js"></script>
 <script src="js/foucsbox.js" type="text/javascript"></script>
 <script type="text/javascript" src="js/bigpicroll.js"></script>
 <script type="text/javascript" src="js/menu.js"></script>
-
-
-
-
-
 
 <script type="text/javascript">
   $(function() {
@@ -67,43 +60,34 @@
                         $("#span_uname").text(user.uname + "欢迎您");
                         $("#span_a").hide();
                         $("#uname").val(user.uname);
-                        $("#name").val(user.name);
-                        $("#email").val(user.email);
-                        $("#phone").val(user.phone);
+                        $("#span_z").text(user.name);
                     }
-                    if(user.address != null){
-                         $("#address").val(user.address);
-                    }
-                    if(user.coding != null){
-                         $("#coding").val(user.coding);
-                    }
-                    if(user.identity != null){
-                          $("#identity").val(user.identity);
-                    }
-                    console.log(user);
                 }
-            });
-            //1.给登录按钮绑定单击事件
-            $("#button2").click(function () {
-                //2.发送ajax请求，提交表单数据
-                $.ajax({
-                    url:'updateUserServlet',
-                    data:{'uname':$("#uname").val(),'name':$("#name").val(),'sex':$('#sex22 input[name="sex"]:checked ').val(),
-                        's1':$("#s1").val(),'s2':$("#s2").val(),'s3':$("#s3").val(),'address':$("#address").val(),
-                        'coding':$("#coding").val(),'identity':$("#identity").val(),'phone':$("#phone").val(),'email':$("#email").val()},
-                    dataType:'json',
-                    success:function (count) {
-                        //3.处理响应数据
-                        if(count==1){
-                            alert("保存成功");
-                        }else{
-                            //登陆失败
-                            alert("保存失败");
-                        }
-                    }
-                })
             })
+            $.ajax({
+                url:'bookServlet',
+                dataType: 'json',
+                success:function (data) {
+                    data.forEach(book=>{
 
+                        let $state=``
+                        if(book.state==2){
+                            $state = '交易成功'
+                        }else{
+                            $state = '待支付'
+                        }
+
+                        let $tr = (`<tr>
+                                <td>${book.bid}</td>
+                                <td>${book.bTime}</td>
+                                <td>${book.bNum}</td>
+                                <td>￥${book.bTotal}</td>
+                                <td>${$state}</td>
+                                </tr>`)
+                        $("#table1").append($tr);
+                    })
+                }
+            })
 
             $("#tuichu").click(function () {
                 $.ajax({
@@ -117,7 +101,6 @@
                 })
             })
         })
-
 
 
     </script>
@@ -135,7 +118,7 @@
         
         	<div class="header_top">
                 <span id="span_uname"></span>
-            	  <span id="span_a"> <a href="#" class="dl">用户登录</a><a href="#" class="dl">注册用户</a></span>|
+                <span id="span_a"> <a href="#" class="dl">用户登录</a><a href="#" class="dl">注册用户</a></span>|
                 <a id="tuichu">退出登录</a>
                 <a href="#">我的梦田</a><span>购物车 <b class="dl">0</b> 件</span><a href="#">梦田导航</a><a href="#">帮助中心</a><a href="#" class="phone">手机购票</a><a href="#" class="jm">演出剧目</a><a href="#" class="cx">真伪查询</a>
             </div>
@@ -173,8 +156,8 @@
      	<div class="member_leftnav">
        		<h3><strong>会员中心</strong></h3>
         		<h4>交易管理</h4>
-        			<ul>
-                    	<li><a href="member.html">订单管理</a></li>
+		  <ul>
+                    	<li><a href="#">订单管理</a></li>
                         <li><a href="#">我的积分</a></li>
                         <li><a href="#">缺货登记</a></li>
                         <li><a href="#">预定登记</a></li>
@@ -185,14 +168,13 @@
                 
                 <h4>账户中心</h4>
         			<ul>
-                        <li><a href="member-mima.html">修改密码</a></li>
-                        <li><a href="#">订单管理</a></li>
+                   	  <li><a href="#">订单管理</a></li>
                         <li><a href="#">我的积分</a></li>
                         <li><a href="#">缺货登记</a></li>
                         <li><a href="#">预定登记</a></li>
                         <li><a href="#">演出通知</a></li>
                         <li><a href="#">我的收藏</a></li>
-                    </ul>
+          </ul>
                 
                 
         </div>	
@@ -200,88 +182,42 @@
         
         
         <div class="member_rightc">
-          <div class="xiugaimima member_boxsty">
-       		<p class="stitle"><strong>修改个人信息</strong></p>
-            <form id="form2" name="form2" method="post" action="">
- 					
-		    <table width="337" height="141" border="0" cellpadding="0" cellspacing="0" class="ziliao_table">
- 				   <tr>
- 				     <td width="65">昵　　称：</td>
- 				     <td width="272">
- 				       <label>
- 				         <input type="text" name="uname" id="uname" class="input-text-2" disabled="disabled" />
-			           </label>
-			         </td>
-		      </tr>
- 				   <tr>
- 				     <td>真实姓名：</td>
- 				     <td><input type="text" name="name" id="name" class="input-text-2" /></td>
-		      </tr>
- 				   <tr>
- 				     <td>性　　别：</td>
- 				     <td id="sex22">
-                         <label class="radio">
-                        <input type="radio" id="sex1" value="男" name="sex" checked="checked" /><span class="m">男</span>
-                         </label>
-                    <label class="radio">
-                        <input type="radio" id="sex2" value="女" name="sex"   /><span>女</span>
-                    </label>
-&nbsp;                      </td>
-		      </tr>
-<script type="text/javascript" src="http://my.damai.cn/js/dateselects.js"></script>
-
-                <tr>
-                    <td>所在区域</td>
-                    <td data-toggle="distpicker" id="td1" >
-                        <select id="s1"></select>
-                        <select id="s2"></select>
-                        <select id="s3"></select>
-                    </td>
-
-                </tr>
+        	 <div class="welco_box">
+             	<div class="wel_left">
+                	<div class="tx">
+                    	<a href="#"><img src="images/simg_tx.jpg" width="90" height="90" /></a>
+                    </div>
+                    <p><a href="member-ziliao.html">编辑个人信息</a></p>
+                </div>
+                
+                
+                <div class="wel_right">
+                	<p>您好，<span id="span_z"></span>！</p>
+                	<p>钱　　包：0 元</p>
+                    <p>积　　分：0</p>
+                    <div class="user-msg"><a href="#">待支付订单（0）</a><a href="#">缺货登记到货（0）</a><a href="#">未读站内消息（1）</a></div>
+                </div>
+                
+                <div class="clear"></div>
+                
+             </div>
+             
+             
+             
+          <div class="dingdan member_boxsty">
+       		<p class="stitle"><strong>最新订单</strong></p>
+       		<table id="table1" width="779" height="89" border="0" cellpadding="0" cellspacing="0" class="dingdan_table">
+             		  <tr class="title" >
+             		    <td width="115">订单号</td>
+             		    <td width="154">成功时间</td>
+             		    <td width="154">订购数量</td>
+             		    <td width="221">订单总金额</td>
+             		    <td width="128">交易状态</td>
+           		    </tr>
 
 
-
-
- 				   <tr>
- 				     <td>街道住址：</td>
- 				     <td> <input type="text" class="input-text-2" id="address" name="address" value="" maxlength="100"/></td>
-		            </tr>
-
-
-                <tr>
-                    <td>邮政编码：</td>
-                    <td><input id="coding" type="text" class="input-text-2" name="coding" value=""/></td>
-                </tr>
-
-                <tr>
-                    <td>身份证号：</td>
-                    <td><input id="identity" type="text" class="input-text-2" name="identity" value=""/></td>
-                </tr>
-
-                <tr>
-                    <td>手机号码：</td>
-                    <td><input id="phone" type="text" class="input-text-2" name="phone" value=""/></td>
-                </tr>
-
-                <tr>
-                    <td>邮箱：</td>
-                    <td> <input type="text" class="input-text-2" id="email" name="email" maxlength="100" disabled="disabled" /></td>
-                </tr>
-
-
- 				 
- 				   <tr>
- 				     <td>&nbsp;</td>
- 				     <td> <input type="button" name="button2" id="button2" value="保存" class="tj_buts" style="margin-left:0;" /></td>
-		      </tr>
-		    </table>
-            
-            
-            </form>
-          </div>
-
-        </div>
+   		    </table>
+             </div>
              
              
         
@@ -364,19 +300,17 @@
     
     
     	<div class="footer_img"><img src="images/footer_img.gif" width="41" height="57" /></div>
-    </div>
-
-
-
-
-
-
-
-
-
-<script src="js/distpicker.data.js"></script>
-<script src="js/distpicker.js"></script>
-<script src="js/main.js"></script>
+    </div>        
+        
+        
+        
+        
+        
+       
+        
+        
+        
+        
 
 
  

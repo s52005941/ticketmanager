@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.newer.mapper.BookMapper">
+    
+    <resultMap id="bk1" type="com.newer.domain.Book">
+        <id property="bid" column="b_id"/>
+        <result property="bTime" column="b_time"/>
+        <result property="bNum" column="b_num"/>
+        <result property="bTotal" column="b_total"/>
+        <result property="state" column="state"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="bk1">
+        select * from book where u_id=#{uid}
+    </select>
+
+</mapper>  

@@ -17,8 +17,16 @@ public class ConcertService {
     }
 
     public List<Concert> findConcertAll(){
-        List<Concert> concerts = null;
-        concerts = concertMapper.findConcertAll();
+        init();
+        List<Concert> concerts = concertMapper.findConcertAll();
+        SqlSessionUtil.close(sqlSession);
         return concerts;
+    }
+
+    public Concert findConcertById(int id){
+        init();
+        Concert concert = concertMapper.findConcertById(id);
+        SqlSessionUtil.close(sqlSession);
+        return concert;
     }
 }

@@ -11,6 +11,15 @@ public class Concert implements Serializable {
     private String cAddr;    // 场馆
     private String cCover;   // 图片
     private String cContent; // 介绍
+    private String cTime;
+
+    public String getcTime() {
+        return cTime;
+    }
+
+    public void setcTime(String cTime) {
+        this.cTime = cTime;
+    }
 
     public Integer getcId() {
         return cId;

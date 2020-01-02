@@ -1,7 +1,7 @@
 package com.newer.domain;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 
 /**
  * 票务实体类
@@ -60,5 +60,17 @@ public class Ticket implements Serializable {
 
     public void settCount(Integer tCount) {
         this.tCount = tCount;
+    }
+
+    @Override
+    public String toString() {
+        return "Ticket{" +
+                "tId=" + tId +
+                ", concert=" + concert +
+                ", tSelect=" + tSelect +
+                ", tPrice=" + tPrice +
+                ", tDetails='" + tDetails + '\'' +
+                ", tCount=" + tCount +
+                '}';
     }
 }

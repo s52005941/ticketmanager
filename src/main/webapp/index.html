@@ -135,6 +135,18 @@ var timer;
                     console.log(user);
                 }
             })
+
+            $("#tuichu").click(function () {
+                $.ajax({
+                    url:"removeSession",
+                    dataType:'json',
+                    success:function (data) {
+                        if(data==1){
+                            location.href = "denglu.html";
+                        }
+                    }
+                })
+            })
         })
 
     </script>
@@ -175,7 +187,9 @@ jQuery(function(){
 
         	<div class="header_top">
                 <span id="span_uname"></span>
-                <span id="span_a"> <a href="#" class="dl">用户登录</a><a href="#" class="dl">注册用户</a> </span>|
+                <span id="span_a"> <a href="denglu.html" class="dl">用户登录</a>
+                    <a href="zhuce.html" class="dl">注册用户</a> </span>|
+                <a id="tuichu">退出登录</a>
                 <a href="member-ziliao.html">我的梦田</a><a href="#">梦田导航</a><a href="#">帮助中心</a><a href="#" class="phone">手机购票</a><a href="#" class="jm">演出剧目</a><a href="#" class="cx">真伪查询</a>
             </div>
         

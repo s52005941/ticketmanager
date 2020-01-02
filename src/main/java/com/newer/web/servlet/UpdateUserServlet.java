@@ -48,6 +48,8 @@ public class UpdateUserServlet extends HttpServlet {
 
         System.out.println(user);
 
+        request.getSession().setAttribute("user",user);
+
         int cont =  service.updateUser(user);
 
         Gson gson = new Gson();
